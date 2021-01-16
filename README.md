@@ -9,7 +9,7 @@ Foobar is a Python library for dealing with word pluralization.
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
 
 ```bash
-pythomn3 -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 
 pip install -r requerements.txt
