@@ -129,35 +129,35 @@ def callback_worker(call):
     bot.send_message(call.message.chat.id,
                      text='Выбери категорию', reply_markup=keyboard)
 
-
 @bot.callback_query_handler(func=lambda call: 'prods' in call.data.split('_'))
 def prods(call):
     bot.delete_message(call.message.chat.id, call.message.message_id)
     id = call.data.split('_')[-1]
     bot.last_update_id
-    r = requests.get(url+'category/'+str(id))
-    for prod in r.json()['products'][:5]:
+    r = requests.get(url+f'product/?category={id}&limit=3')
+    for prod in r.json()['results']:
         prod_id = prod['id']
         name = prod['name']
         price = prod['price']
-        images = prod['images']
+        # images = prod['images']
         images = 'https://im0-tub-ru.yandex.net/i?id=b6a2cf0ee7b2aafd66d4e996bab05433&n=13'
 
         keyboard = types.InlineKeyboardMarkup()
         key_1 = types.InlineKeyboardButton(
-            text='Добавить', callback_data='add_'+str(prod_id))
+            text='Добавить', callback_data=f'add_{prod_id}')
         key_2 = types.InlineKeyboardButton(
-            text='Заказать в 1 клик', callback_data='add_'+str(prod_id))
+            text='Заказать в 1 клик', callback_data=f'add_{prod_id}')
         keyboard.add(key_1, key_2)
-        img = [types.InputMediaPhoto(images, caption='test')
-               for img in range(5)]
-        # images[0]['image']
+        img = [types.InputMediaPhoto(images, caption=name)
+               for img in range(3)]
+        # img = [types.InputMediaPhoto(img['image'], caption='test')
+        #        for img in images]
         bot.send_media_group(call.message.chat.id, img)
         bot.send_message(call.message.chat.id,
                          f'''{name}
 {price}р.''', reply_markup=keyboard)
 
-        time.sleep(0.3)
+        # time.sleep(0.3)
 
 
 # ОТПРАВКА 1 IMG
